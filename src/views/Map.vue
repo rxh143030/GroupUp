@@ -7,12 +7,17 @@
             index-name="prod_GROUP"
             style="height: 100%"
         >
+        
     
         <div class="tray">
         
             <div class="tray-head">
-                <h3>Search</h3>
 
+                <div class="tray-subhead">
+                  <h3>Search</h3>
+                  <button><i class="far fa-edit"></i></button>
+                </div>
+                
                 <div class="search-container">
                     
                     <ais-search-box>
@@ -22,37 +27,45 @@
 
             </div>
 
-                <ais-results>
-                  <template slot-scope="{ result }">
-                      <div @click="eventClick(result.eventName)"  class="event-items">
-                          <b><ais-highlight :result="result" attribute-name="eventName"></ais-highlight></b>
-                      </div>
-                  </template>
-                </ais-results>
+      
+            <ais-results>
+              <template slot-scope="{ result }">
+                  <div @click="toggleInfoWindow(result)"  class="event-items">
+                      <b><ais-highlight :result="result" attribute-name="eventName"></ais-highlight></b>
+                  </div>
+              </template>
+            </ais-results>
           
 
-          <div class="add-event-wrapper">
-      
-          </div>
 
         </div>
 
         <div class="gmap-container">
 
           <GmapMap
-            :center="{lat:32.986871, lng:-96.749840}"
-            :zoom="16"
+            :center="centerPlace"
+            :zoom="mapZoom"
             map-type-id="terrain"
             :options="mapOptions"
             style="width: 100%; height: 100%;"
           >
+
+            <gmap-info-window :options="infoOptions" :position="infoWindowPos" :opened="infoWinOpen" @closeclick="infoWinOpen=false">
+              <div v-if="infoWinOpen = true" class="info-box">
+                <b>{{currentMarker.eventName}}</b>
+                <p><b>Category: </b>{{currentMarker.category}}</p>
+                <p><b>Date: </b>{{currentMarker.date}}</p>
+                <p><b>Description: </b>{{currentMarker.description}}</p>
+              </div>
+            </gmap-info-window>
+
             <ais-results>
               <template slot-scope="{ result }">
                 <GmapMarker
                   :position="result.position"
                   :clickable="true"
                   :draggable="false"
-                  @click="center=result.position"
+                  @click="toggleInfoWindow(result)"
                 />
               </template>
             </ais-results>
@@ -77,10 +90,28 @@ export default {
   },
   data: function(){
     return{
+      
+      centerPlace: {
+        lat:32.986871, 
+        lng:-96.749840
+      },
+      currentPlace: {},
+
+      currentMarker: {},
+      infoEvent: null,
+      infoWindowPos: null,
+      infoWinOpen: false,
+      //optional: offset infowindow so it visually sits nicely on top of our marker
+      infoOptions: {
+        pixelOffset: {
+          width: 0,
+          height: -35,
+        }
+      },
+      
       mapOptions: {
         mapTypeControl: false,
       },
-      center: {lat: 10.0, lng: 10.0 },
       markers: [
         {
           position: {lat: 10.0, lng: 10.0}
@@ -88,11 +119,46 @@ export default {
         {
           position: {lat: 10.0, lng: 12.0}
         },
-      ]
+      ],
+      mapZoom: 16,
+    }
+  },
+  methods: {
+    geolocate: function() {
+      navigator.geolocation.getCurrentPosition(position => {
+        this.currentPlace = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+
+      });
+    },
+    eventClick: function(event){
+      this.centerPlace = event.position;
+    },
+    toggleInfoWindow: function(marker){
+      this.centerPlace = marker.position;
+      this.infoWindowPos = marker.position;
+      this.mapZoom = 18;
+
+      //check if its the same marker that was selected if yes toggle
+      if (this.currenMarker == marker) {
+        this.infoWinOpen = !this.infoWinOpen;
+      }
+      //if different marker set infowindow to open and reset current marker index
+      else {
+        this.infoWinOpen = true;
+        this.currentMarker = marker;
+      }
+    },
+    addIndex: function() {
+      index.addObjects(objects, function(err, content) {
+        console.log(content);
+      });
     }
   },
   mounted: function(){
-    
+    this.geolocate();
   }
 }
 </script>
@@ -104,8 +170,12 @@ export default {
 
   $blue-grey: #333333;
 
+  .add-event-wrapper{
+    border-top:  1px solid #D6D9DC;
+  }
+
   h3{
-      margin: 0 0 24px;
+      margin: 0
   }
 
   .ais-search-box{
@@ -149,19 +219,39 @@ export default {
           padding: 24px;
           border-bottom: 1px solid #D6D9DC;
       }
+
+      .tray-subhead{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 24px;
+
+        button{
+          outline: none;
+          background: none;
+          border: none;
+          padding: 4px;
+          cursor: pointer;
+        }
+
+        i{
+          font-size: 20px;
+        }
+      }
   }
 
   .event-items{
       font-family: $font-open;
       font-size: 13px;
-      background: #F7F7F7;
+      background: white;
       padding: 18px 25px;
       border-bottom: 1px solid #D6D9DC;
       cursor: pointer;
   }
 
   .event-items:hover{
-      background: white;
+      background: #e5e5e5;
   }
 
   .map, .gmap-container{

@@ -56,7 +56,6 @@ export default {
   }
 
   .navigation{
-    padding-top: 24px;
 
     display: flex;
     flex-direction: column;
@@ -66,6 +65,8 @@ export default {
     position: absolute;
     height: 100%;
     border-right: 1px solid #D6D9DC;
+
+    z-index: 10;
   
     button{
       padding: 10px 0;
@@ -74,6 +75,10 @@ export default {
       outline:none;
       cursor: pointer;
       
+    }
+
+    button:first-of-type{
+      margin-top: 24px;
     }
 
     i{
