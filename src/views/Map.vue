@@ -7,6 +7,12 @@
             index-name="prod_GROUP"
             style="height: 100%"
         >
+
+        <div class="new-event-wrapper">
+          <div>
+
+          </div>
+        </div>
         
     
         <div class="tray">
@@ -39,6 +45,7 @@
 
 
         </div>
+
 
         <div class="gmap-container">
 
