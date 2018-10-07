@@ -10,7 +10,9 @@
   "dependencies": {
     "register-service-worker": "^1.0.0",
     "vue": "^2.5.17",
+    "vue-instantsearch": "^1.7.0",
     "vue-router": "^3.0.1",
+    "vue2-google-maps": "^0.10.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {

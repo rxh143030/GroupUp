@@ -1,29 +1,94 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <div class="navigation">
+      
+      <button><i class="fas fa-user-circle"></i></button>
+      <router-link to="/">
+        <button >
+          <i  class="far fa-map"></i>
+        </button>
+      </router-link> 
+      <router-link to="/calendar">
+        <button><i class="far fa-calendar-alt"></i></button>
+      </router-link>
     </div>
-    <router-view/>
+    <div class="content">
+      <router-view/>
+    </div>
   </div>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
+<script>
+export default {
+  data: function(){
+    return{
     }
   }
 }
+</script>
+
+
+<style lang="scss">
+  $font-amatic: 'Amatic SC', cursive;
+  $font-open: 'Open Sans', sans-serif;
+
+  $blue-grey: #333333;
+
+  html, body, #app, .content{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
+
+  body{
+    color:$blue-grey;
+  }
+
+  h3{
+    color: $blue-grey;
+    font-family: $font-amatic;
+    font-size: 30px;
+  }
+
+  p{
+    color: $blue-grey;
+    font-family: $font-open;
+  }
+
+  .navigation{
+    padding-top: 24px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    width: 50px;
+    position: absolute;
+    height: 100%;
+    border-right: 1px solid #D6D9DC;
+  
+    button{
+      padding: 10px 0;
+      margin: 3px 0;
+      border: none;
+      outline:none;
+      cursor: pointer;
+      
+    }
+
+    i{
+      display: block;
+      color:$blue-grey;
+      font-size: 24px;
+    }
+
+    a, button{
+      width: 100%;
+    }
+  }
+
+  
+
+
+
 </style>
